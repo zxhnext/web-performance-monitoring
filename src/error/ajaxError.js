@@ -1,11 +1,15 @@
-import BaseMonitor from "../base/baseMonitor.js";
-import { ErrorCategoryEnum , AjaxLibEnum, ErrorLevelEnum } from "../base/baseConfig.js";
+import Monitor from "../library/monitor.js";
+import {
+    ErrorCategoryEnum,
+    AjaxLibEnum,
+    ErrorLevelEnum
+} from "../library/config.js";
 
 /**
  * ajax error异常
  */
 class AjaxError {
-    constructor(params){
+    constructor(params) {
         this.params = params;
     }
     /**
@@ -13,8 +17,8 @@ class AjaxError {
      * @param type {*} ajax库类型
      * @param error{*} 错误信息
      */
-    handleError(type,err){
-        switch(type){
+    handleError(type, err) {
+        switch (type) {
             case AjaxLibEnum.AXIOS:
                 new AxiosError(this.params).handleError(err);
                 break;
@@ -30,14 +34,14 @@ export default AjaxError;
 /**
  * Axios类库 错误信息处理(如果不配置，可以统一通过XHR接受错误信息)
  */
-class AxiosError extends BaseMonitor {
+class AxiosError extends Monitor {
 
-    constructor(params){
+    constructor(params) {
         super(params);
     }
 
-    handleError(error){
-        if(error && error.config && error.config.url){
+    handleError(error) {
+        if (error && error.config && error.config.url) {
             this.url = error.config.url;
         }
         this.level = ErrorLevelEnum.WARN;
@@ -50,21 +54,21 @@ class AxiosError extends BaseMonitor {
 /**
  * 获取HTTP错误信息
  */
-class XHRError extends BaseMonitor {
+class XHRError extends Monitor {
 
-    constructor(params){
+    constructor(params) {
         super(params);
     }
 
     /**
      * 获取错误信息
      */
-    handleError(){
-        if(!window.XMLHttpRequest){
+    handleError() {
+        if (!window.XMLHttpRequest) {
             return;
         }
         let xhrSend = XMLHttpRequest.prototype.send;
-        let _handleEvent = (event)=>{
+        let _handleEvent = (event) => {
             try {
                 if (event && event.currentTarget && event.currentTarget.status !== 200) {
                     this.level = ErrorLevelEnum.WARN;
@@ -76,27 +80,27 @@ class XHRError extends BaseMonitor {
                         statusText: event.target.statusText
                     };
                     this.recordError();
-                }    
+                }
             } catch (error) {
                 console.log(error);
             }
         };
-        XMLHttpRequest.prototype.send = function(){
-            if (this.addEventListener){
-                this.addEventListener('error', _handleEvent);
-                this.addEventListener('load', _handleEvent);
-                this.addEventListener('abort', _handleEvent);
+        XMLHttpRequest.prototype.send = function () {
+            if (this.addEventListener) {
+                this.addEventListener('error', _handleEvent); // 失败
+                this.addEventListener('load', _handleEvent); // 完成
+                this.addEventListener('abort', _handleEvent); // 取消
             } else {
                 let tempStateChange = this.onreadystatechange;
-                this.onreadystatechange = function(event){
-                    tempStateChange.apply(this,arguments);
+                this.onreadystatechange = function (event) {
+                    tempStateChange.apply(this, arguments);
                     if (this.readyState === 4) {
                         _handleEvent(event);
                     }
                 }
             }
-            return xhrSend.apply(this,arguments);
+            return xhrSend.apply(this, arguments);
         }
     }
-    
+
 }
