@@ -42,3 +42,12 @@ class ResourceError extends Monitor {
     }
 }
 export default ResourceError;
+
+// object.onerror
+// 如script，image等标签src引用，会返回一个event对象 ,TIPS: object.onerror不会冒泡到window对象，所以window.onerror无法监控资源加载错误
+
+// var img = new Image();
+// img.src = 'http://xxx.com/xxx.jpg';
+// img.onerror = function(event) {
+//     console.log(event);
+// }

@@ -28,6 +28,8 @@ class PromiseError extends Monitor {
                 this.level = ErrorLevelEnum.WARN;
                 this.category = ErrorCategoryEnum.PROMISE_ERROR;
                 this.msg = event.reason;
+                this.responseTime = event.timeStamp; // 响应时间
+                this.pageUrl = event.target.document.URL
                 this.recordError();
             } catch (error) {
                 console.log(error);

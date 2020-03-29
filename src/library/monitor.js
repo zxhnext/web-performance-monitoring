@@ -10,7 +10,7 @@ import TaskQueue from "./taskQueue.js"
 /**
  * 监控基类
  */
-class BaseMonitor {
+class Monitor {
 
     /**
      * 上报错误地址

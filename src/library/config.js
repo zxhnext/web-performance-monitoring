@@ -78,5 +78,6 @@ export class ErrorLevelEnum {
  */
 export class AjaxLibEnum {
     static get AXIOS(){ return 'axios';}
+    static get FETCH() { return 'fetch'; }
     static get DEFAULT(){ return 'default';}
 }
