@@ -51,3 +51,25 @@ export default ResourceError;
 // img.onerror = function(event) {
 //     console.log(event);
 // }
+
+// 统计每个页面的JS和CSS加载时间
+{/* <script>var cssLoadStart = +new Date</script>
+<link rel="stylesheet" href="xxx.css" type="text/css" media="all">
+<link rel="stylesheet" href="xxx1.css" type="text/css" media="all">
+<link rel="stylesheet" href="xxx2.css" type="text/css" media="all">
+<sript>
+   var cssLoadTime = (+new Date) - cssLoadStart;
+   var jsLoadStart = +new Date;
+</script>
+<script type="text/javascript" src="xx1.js"></script>
+<script type="text/javascript" src="xx2.js"></script>
+<script type="text/javascript" src="xx3.js"></script>
+<script>
+   var jsLoadTime = (+new Date) - jsLoadStart;
+   var REPORT_URL = 'xxx/cgi?data='
+   var img = new Image;
+   img.onload = img.onerror = function(){
+      img = null;
+   };
+   img.src = REPORT_URL + cssLoadTime + '-' + jsLoadTime;
+</script> */}
