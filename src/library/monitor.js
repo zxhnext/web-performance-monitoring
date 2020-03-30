@@ -141,4 +141,4 @@ class Monitor {
     }
 
 }
-export default BaseMonitor;
+export default Monitor;

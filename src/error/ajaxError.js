@@ -4,6 +4,7 @@ import {
     AjaxLibEnum,
     ErrorLevelEnum
 } from "../library/config.js";
+import utils from "../library/utils";
 
 /**
  * ajax error异常
@@ -44,17 +45,96 @@ class AxiosError extends Monitor {
     }
 
     handleError(error) {
-        if (error && error.config && error.config.url) {
-            this.url = error.config.url;
+        if (!window.axios) return;
+        const _axios = window.axios
+        const List = ['axios', 'request', 'get', 'delete', 'head', 'options', 'put', 'post', 'patch']
+        List.forEach(item => {
+            _reseat(item)
+        })
+
+        function _reseat(item) {
+            let _key = null;
+            if (item === 'axios') {
+                window['axios'] = resetFn;
+                _key = _axios
+            } else if (item === 'request') {
+                window['axios']['request'] = resetFn;
+                _key = _axios['request'];
+            } else {
+                window['axios'][item] = resetFn;
+                _key = _axios[item];
+            }
+
+            function resetFn() {
+                const result = ajaxArg(arguments, item)
+                if (result.report !== 'report-data') {
+                    const url = result.url ? result.url.split('?')[0] : '';
+                }
+                return _key.apply(this, arguments)
+                    .then(function (res) {
+                        if (result.report === 'report-data') return res;
+                        try {
+                            if (res.status !== 200) {
+                                this.recordError();
+                            }
+                        } catch (e) { }
+                        return res
+                    })
+                    .catch((err) => {
+                        if (result.report === 'report-data') return res;
+                        
+                        // statusText: err.message,
+                        // method: result.method,
+                        // responseURL: result.url,
+                        // options: result.options,
+                        // status: err.response ? err.response.status : 0,
+                        
+                        this.recordError();
+                        return err
+                    })
+            }
         }
-        this.level = ErrorLevelEnum.WARN;
-        this.category = ErrorCategoryEnum.AJAX_ERROR;
-        this.msg = JSON.stringify(error);
-        this.recordError();
+
+        // Ajax arguments
+        function ajaxArg(arg, item) {
+            let result = { method: 'GET', type: 'xmlhttprequest', report: '' }
+            let args = Array.prototype.slice.apply(arg)
+            try {
+                if (item == 'axios' || item == 'request') {
+                    result.url = args[0].url
+                    result.method = args[0].method
+                    result.options = result.method.toLowerCase() == 'get' ? args[0].params : args[0].data
+                } else {
+                    result.url = args[0]
+                    result.method = ''
+                    if (args[1]) {
+                        if (args[1].params) {
+                            result.method = 'GET'
+                            result.options = args[1].params;
+                        } else {
+                            result.method = 'POST'
+                            result.options = args[1];
+                        }
+                    }
+                }
+                result.report = args[0].report
+            } catch (err) { }
+            return result;
+        }
     }
+
+    // handleError(error) {
+    //     if (error && error.config && error.config.url) {
+    //         this.url = error.config.url;
+    //     }
+    //     this.level = ErrorLevelEnum.WARN;
+    //     this.category = ErrorCategoryEnum.AJAX_ERROR;
+    //     this.msg = JSON.stringify(error);
+    //     this.recordError();
+    // }
 }
 
-class AxiosError extends Monitor {
+class FetchError extends Monitor {
 
     constructor(params) {
         super(params);
@@ -66,6 +146,20 @@ class AxiosError extends Monitor {
         window.fetch = function () {
             this.level = ErrorLevelEnum.WARN;
             this.category = ErrorCategoryEnum.AJAX_ERROR;
+            let args = Array.prototype.slice.apply(arg);
+            if (!args || !args.length) return result;
+            if (args.length === 1) {
+                if (typeof args[0] === 'string') {
+                    this.url = args[0];
+                } else if (utils.isObject(args[0])) {
+                    this.url = args[0].url;
+                    this.method = args[0].method;
+                }
+            } else {
+                this.url = args[0];
+                this.method = args[1].method;
+                this.type = args[1].type;
+            }
             this.url = arguments[0]
             this.metaData = arguments[1]
             return _oldFetch.apply(this, arguments)
