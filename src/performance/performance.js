@@ -2,23 +2,6 @@
  * 页面性能监控
  */
 
-const MARK_START = 'start'
-const MARK_END = 'end'
-const prefix = fix => input => `${fix}${input}`
-const prefixStart = prefix(MARK_START)
-const prefixEnd = prefix(MARK_END)
-
-// function per() {
-//   performance.mark('per_begin');
-//   for(let a = 1; a < 10000;a++) {}
-//   performance.mark('per_end');
-// }
-// per();  // 这时候我们调用 performance.getEntriesByType('mark') 就可以看到刚刚我们标记的两个时间戳了
-// // 我们使用 measure 来计算这两个标记点之间所消耗的时间
-// performance.measure('per', 'per_begin', 'per_end'); 
-// // 获取 measure 的时间了
-// performance.getEntriesByName('per')
-
 const pagePerformance = {
 
     // 获取时间
@@ -75,7 +58,7 @@ const pagePerformance = {
             //【原因】是否太多不必要的操作都放到 onload 回调函数里执行了，考虑过延迟加载、按需加载的策略么？
             times.onload = timing.loadEventEnd - timing.loadEventStart;
             // 前端总时间
-            frontend = timing.loadEventEnd - timing.domLoading;
+            times.frontend = timing.loadEventEnd - timing.domLoading;
 
             // 白屏时间
             times.blankTime = timing.domLoading - timing.navigationStart;
@@ -129,27 +112,74 @@ const pagePerformance = {
         return entryTimesList;
     },
 
-    // 包裹需要被统计时长的函数
-    async measure(fn, name = fn.name) {
-        const startName = prefixStart(name)
-        const endName = prefixEnd(name)
-        performance.mark(startName)
-        await fn()
-        performance.mark(endName)
-        // 调用 measure
-        performance.measure(name, startName, endName)
+    /**
+     * 分domReady和onLoad两个方法是因为有可能资源未全部加载完成就关闭了浏览器窗口
+     */
+    domReady(callback) {
+        let Timer = null
+        let check = () => {
+            if (window.performance.timing.domInteractive) {
+                clearTimeout(Timer)
+                callback()
+            } else {
+                Timer = setTimeout(check, 100)
+            }
+        }
+        if (document.readyState === 'interactive') {
+            callback()
+            return
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            check()
+        })
     },
 
-    // 获取某个函数运行时长
-    retrieveResult(name) {
-        const [{
-            duration
-        }] = performance.getEntriesByName(name)
-        performance.clearMarks(`${MARK_START}${name}`)
-        performance.clearMarks(`${MARK_END}${name}`)
-        performance.clearMeasures(name)
-        return duration
-    }
+    onLoad(callback) {
+        let Timer = null
+        let check = () => {
+            if (window.performance.timing.loadEventEnd) {
+                clearTimeout(Timer)
+                callback()
+            } else {
+                Timer = setTimeout(check, 100)
+            }
+        }
+        // 资源都加载完成
+        if (document.readyState === 'complete') {
+            callback()
+            return
+        }
+        window.addEventListener('load', () => {
+            check()
+        }, false)
+    },
+
+    // 资源加载完毕
+    resourceOnLoad (cb) {
+        // 资源都加载完成
+        if (document.readyState === 'complete') {
+          cb();
+          return
+        }
+        window.addEventListener('load', () => {
+          cb();
+        }, false);
+      }
 };
 
 export default pagePerformance;
+
+// performance.now()
+// const t0 = performance.now();
+// for (let i = 0; i < array.length; i++) {
+//      some code
+// }
+// const t1 = performance.now();
+// console.log(t1 - t0, 'milliseconds');
+
+// console.time('test');
+// console.time('test');
+// for (let i = 0; i < array.length; i++) {
+//   // some code
+// }
+// console.timeEnd('test');

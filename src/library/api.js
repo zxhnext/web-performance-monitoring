@@ -16,7 +16,7 @@ class API {
             return;
         }
         console.log("上报地址："+this.url);
-        this.sendInfo(data);
+        this.reportByImg(data);
     }
 
     /**

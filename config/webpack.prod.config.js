@@ -56,19 +56,19 @@ module.exports = {
         }),
         
         //压缩配置
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false,
-                drop_debugger: true,
-                drop_console: false
-            },
-            output: {
-                comments: false
-            },
-            mangle:{
-                except:['$super','$','exports','require']
-            }
-        }),
+        // new webpack.optimize.UglifyJsPlugin({
+        //     compress: {
+        //         warnings: false,
+        //         drop_debugger: true,
+        //         drop_console: false
+        //     },
+        //     output: {
+        //         comments: false
+        //     },
+        //     mangle:{
+        //         except:['$super','$','exports','require']
+        //     }
+        // }),
         
     ]
 
