@@ -10,7 +10,7 @@ class MonitorPerformance {
     constructor(){
         this.isPage = true; //是否上报页面性能数据
         this.isResource = true; //是否上报页面资源数据
-        this.outTime = 500;
+        this.outTime = 2000;
         this.config = {
             resourceList:[], //资源列表
             performance:{}, //页面性能列表
@@ -22,7 +22,7 @@ class MonitorPerformance {
      * @param {*} params  {pageId ：页面标示,url ：上报地址}
      */
     record(params){
-        setTimeout(()=>{
+        pagePerformance.onLoad(() => {
             if(this.isPage){
                 // pagePerformance.domReady(() => {
                     this.config.performance = pagePerformance.getTiming();
@@ -52,7 +52,7 @@ class MonitorPerformance {
             //发送监控数据
             new API(params.url).report(result);
             this.clearPerformance();
-        }, this.outTime);
+        });
     }
 
     /**

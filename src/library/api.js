@@ -16,7 +16,7 @@ class API {
             return;
         }
         console.log("上报地址："+this.url);
-        this.reportByImg(data);
+        this.sendInfo(data);
     }
 
     /**
@@ -24,11 +24,12 @@ class API {
      */
     sendInfo(data){
         try {
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST",this.url,true);
-            //xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.send(JSON.stringify(data));
+            // var xhr = new XMLHttpRequest();
+            // xhr.open("POST",this.url,true);
+            // //xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            // xhr.setRequestHeader("Content-Type", "application/json");
+            // xhr.send(JSON.stringify(data));
+            navigator.sendBeacon(this.url, JSON.stringify(data))
         } catch (error) {
             console.log(error);
         }

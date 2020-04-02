@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <style>
+        body {
+            background: gray;
+        }
+    </style>
+    <link href="https://cdn.bootcss.com/animate.css/3.7.0/animate.min.css" rel="stylesheet">
+    <script>
+        performance.mark("css done");
+    </script>
 </head>
 <body>
 
@@ -24,8 +33,13 @@
         {{ message +'4'}}
     </div>
     
+    <script>
+        performance.mark("text done");
+    </script>
     <script src="../dist/monitorjs.min.js"></script>
     <script src="../node_modules/vue/dist/vue.min.js"></script>
+
+    
 
     <script>
         new MonitorJS().monitorPerformance({
@@ -39,9 +53,12 @@
 
             }
         }
-    
-        console.log('--', MeasureJs.measure(a))
 
+        ObserverJs.getTimesAndReport({
+            pageId: 1,
+            url: 'http://baidu.com/api'
+        })
+        
         // new MonitorJS().init({
         //     url:"http://baidu.com/api",    //上报错误地址
         //     consoleError:true,

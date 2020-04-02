@@ -1,6 +1,6 @@
 import MonitorJS from "./monitorjs.js";
-import MeasureJs from './performance/measure.js'
-export { MonitorJS, MeasureJs }
+import ObserverJs from './performance/observer.js'
+export { MonitorJS, ObserverJs }
 
 window.MonitorJS = MonitorJS;
-window.MeasureJs = MeasureJs;
+window.ObserverJs = ObserverJs;
