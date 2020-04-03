@@ -17,6 +17,7 @@ observer1.observe({
 
 // longtask
 // 长任务建议在空闲时执行 requestIdleCallback+webwork
+// 耗时较长的任务阻塞主线程(超过50ms)
 const observer2 = new PerformanceObserver((list) => {
     for (const entry of list.getEntries()) {
         times[entry.name] = entry.startTime + entry.duration
