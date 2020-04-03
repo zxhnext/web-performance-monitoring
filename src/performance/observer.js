@@ -65,3 +65,5 @@ export default{
         return t1 - t0;
     }
 }
+
+// tti原理：https://www.jianshu.com/p/a898e2727b6f
