@@ -113,6 +113,9 @@ class Monitor {
                 recordInfo.responseTime = params.responseTime || null
                 break
             case ErrorCategoryEnum.PROMISE_ERROR:
+                recordInfo.resourceUrl = params.resourceUrl || null
+                recordInfo.line = params.line || null
+                recordInfo.col = params.col || null
                 recordInfo.responseTime = params.responseTime || null
                 break
             case ErrorCategoryEnum.RESOURCE_ERROR:

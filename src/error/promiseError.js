@@ -26,24 +26,24 @@ class PromiseError {
                 if (event.reason.config && event.reason.config.url) {
                     data.url = event.reason.config.url
                 }
-                // const error = event && event.reason
-                // const stack = error.stack || ''
-                // // Processing error
-                // let resourceUrl, col, line
-                // let errs = stack.match(/\(.+?\)/)
-                // if (errs && errs.length) errs = errs[0]
-                // errs = errs.replace(/\w.+[js|html]/g, $1 => { resourceUrl = $1; return ''; })
-                // errs = errs.split(':')
-                // if (errs && errs.length > 1) line = parseInt(errs[1] || 0)
-                // col = parseInt(errs[2] || 0)
-                // data.data = {
-                //     resourceUrl,
-                //     line,
-                //     col
-                // }
+                const error = event && event.reason
+                const stack = error.stack || ''
+                // Processing error
+                let resourceUrl
+                let errs = stack.match(/\(.+?\)/)
+                if (errs && errs.length) {
+                    errs = errs[0]
+                    errs = errs.replace(/\w.+[js|html]/g, $1 => { resourceUrl = $1; return ''; })
+                    data.resourceUrl = resourceUrl || null
+                    errs = errs.split(':')
+                    if (errs.length > 1) {
+                        data.line = parseInt(errs[1] || null)
+                        data.col = parseInt(errs[2] || null)
+                    }
+                }
                 data.level = ErrorLevelEnum.WARN
                 data.category = ErrorCategoryEnum.PROMISE_ERROR
-                data.msg = event.reason
+                data.msg = event.reason.message || event.reason
                 data.responseTime = event.timeStamp // 响应时间
                 data.url = event.target.document.URL
                 new Monitor(this.params).recordError(data)
