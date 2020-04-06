@@ -1,8 +1,8 @@
-var DeviceInfo = (function() {
-    var root = typeof self !== 'undefined' ? self : this
-    var _window = root || {}
+let DeviceInfo = (function() {
+    const root = typeof self !== 'undefined' ? self : this
+    const _window = root || {}
     // 变量库
-    var VariableLibrary = {
+    let VariableLibrary = {
         navigator: typeof root.navigator != 'undefined' ? root.navigator : {},
         // 信息map
         infoMap: {
@@ -71,7 +71,7 @@ var DeviceInfo = (function() {
         }
     }
     // 方法库
-    var MethodLibrary = (function() {
+    let MethodLibrary = (function() {
         return {
             // 获取匹配库
             getMatchMap: function(u) {
@@ -146,34 +146,34 @@ var DeviceInfo = (function() {
                 }
             },
             // 在信息map和匹配库中进行匹配
-            matchInfoMap: function(_this) {
-                var u = VariableLibrary.navigator.userAgent || {}
-                var match = MethodLibrary.getMatchMap(u)
-                for (var s in VariableLibrary.infoMap) {
-                    for (var i = 0; i < VariableLibrary.infoMap[s].length; i++) {
-                        var value = VariableLibrary.infoMap[s][i]
+            matchInfoMap: function(_self) {
+                let u = VariableLibrary.navigator.userAgent || {}
+                let match = MethodLibrary.getMatchMap(u)
+                for (let s in VariableLibrary.infoMap) {
+                    for (let i = 0; i < VariableLibrary.infoMap[s].length; i++) {
+                        let value = VariableLibrary.infoMap[s][i]
                         if (match[value]) {
-                            _this[s] = value
+                            _self[s] = value
                         }
                     }
                 }
             },
             // 获取当前操作系统
             getOS: function() {
-                var _this = this
-                MethodLibrary.matchInfoMap(_this)
-                return _this.os
+                let _self = this
+                MethodLibrary.matchInfoMap(_self)
+                return _self.os
             },
             // 获取操作系统版本
             getOSVersion: function() {
-                var _this = this
-                var u = VariableLibrary.navigator.userAgent || {}
-                _this.osVersion = ''
+                let _self = this
+                let u = VariableLibrary.navigator.userAgent || {}
+                _self.osVersion = ''
                 // 系统版本信息
-                var osVersion = {
+                let osVersion = {
                     Windows: function() {
-                        var v = u.replace(/^.*Windows NT ([\d.]+);.*$/, '$1')
-                        var oldWindowsVersionMap = {
+                        let v = u.replace(/^.*Windows NT ([\d.]+);.*$/, '$1')
+                        let oldWindowsVersionMap = {
                             '6.4': '10',
                             '6.3': '8.1',
                             '6.2': '8',
@@ -204,18 +204,18 @@ var DeviceInfo = (function() {
                         return u.replace(/^.*hpwOS\/([\d.]+);.*$/, '$1')
                     }
                 }
-                if (osVersion[_this.os]) {
-                    _this.osVersion = osVersion[_this.os]()
-                    if (_this.osVersion == u) {
-                        _this.osVersion = ''
+                if (osVersion[_self.os]) {
+                    _self.osVersion = osVersion[_self.os]()
+                    if (_self.osVersion == u) {
+                        _self.osVersion = ''
                     }
                 }
-                return _this.osVersion
+                return _self.osVersion
             },
             // 获取横竖屏状态
             getOrientationStatu: function() {
-                var orientationStatus = ''
-                var orientation = window.matchMedia('(orientation: portrait)')
+                let orientationStatus = ''
+                let orientation = window.matchMedia('(orientation: portrait)')
                 if (orientation.matches) {
                     orientationStatus = '竖屏'
                 } else {
@@ -225,34 +225,34 @@ var DeviceInfo = (function() {
             },
             // 获取设备类型
             getDeviceType: function() {
-                var _this = this
-                _this.device = 'PC'
-                MethodLibrary.matchInfoMap(_this)
-                return _this.device
+                let _self = this
+                _self.device = 'PC'
+                MethodLibrary.matchInfoMap(_self)
+                return _self.device
             },
             // 获取网络状态
             getNetwork: function() {
-                var netWork = navigator && navigator.connection && navigator.connection.effectiveType
+                let netWork = navigator && navigator.connection && navigator.connection.effectiveType
                 return netWork
             },
             // 获取当前语言
             getLanguage: function() {
-                var _this = this
-                _this.language = (function() {
-                    var language = VariableLibrary.navigator.browserLanguage || VariableLibrary.navigator.language
-                    var arr = language.split('-')
+                let _self = this
+                _self.language = (function() {
+                    let language = VariableLibrary.navigator.browserLanguage || VariableLibrary.navigator.language
+                    let arr = language.split('-')
                     if (arr[1]) {
                         arr[1] = arr[1].toUpperCase()
                     }
                     return arr.join('_')
                 })()
-                return _this.language
+                return _self.language
             },
             // 生成浏览器指纹
             createFingerprint: function(domain) {
-                var fingerprint
+                let fingerprint
                 function bin2hex(s) {
-                    var i,
+                    let i,
                         l,
                         n,
                         o = ''
@@ -263,9 +263,9 @@ var DeviceInfo = (function() {
                     }
                     return o
                 }
-                var canvas = document.createElement('canvas')
-                var ctx = canvas.getContext('2d')
-                var txt = domain || window.location.host
+                let canvas = document.createElement('canvas')
+                let ctx = canvas.getContext('2d')
+                let txt = domain || window.location.host
                 ctx.textBaseline = 'top'
                 ctx.font = "14px 'Arial'"
                 ctx.textBaseline = 'tencent'
@@ -275,22 +275,22 @@ var DeviceInfo = (function() {
                 ctx.fillText(txt, 2, 15)
                 ctx.fillStyle = 'rgba(102, 204, 0, 0.7)'
                 ctx.fillText(txt, 4, 17)
-                var b64 = canvas.toDataURL().replace('data:image/png;base64,', '')
-                var bin = atob(b64)
-                var crc = bin2hex(bin.slice(-16, -12))
+                let b64 = canvas.toDataURL().replace('data:image/png;base64,', '')
+                let bin = atob(b64)
+                let crc = bin2hex(bin.slice(-16, -12))
                 fingerprint = crc
                 return fingerprint
             },
             // 浏览器信息
             getBrowserInfo: function() {
-                var _this = this
-                MethodLibrary.matchInfoMap(_this)
+                let _self = this
+                MethodLibrary.matchInfoMap(_self)
 
-                var u = VariableLibrary.navigator.userAgent || {}
+                let u = VariableLibrary.navigator.userAgent || {}
 
-                var _mime = function(option, value) {
-                    var mimeTypes = VariableLibrary.navigator.mimeTypes
-                    for (var key in mimeTypes) {
+                let _mime = function(option, value) {
+                    let mimeTypes = VariableLibrary.navigator.mimeTypes
+                    for (let key in mimeTypes) {
                         if (mimeTypes[key][option] == value) {
                             return true
                         }
@@ -298,11 +298,11 @@ var DeviceInfo = (function() {
                     return false
                 }
 
-                var match = MethodLibrary.getMatchMap(u)
+                let match = MethodLibrary.getMatchMap(u)
 
-                var is360 = false
+                let is360 = false
                 if (_window.chrome) {
-                    var chrome_vision = u.replace(/^.*Chrome\/([\d]+).*$/, '$1')
+                    let chrome_vision = u.replace(/^.*Chrome\/([\d]+).*$/, '$1')
                     if (chrome_vision > 36 && _window.showModalDialog) {
                         is360 = true
                     } else if (chrome_vision > 45) {
@@ -328,7 +328,7 @@ var DeviceInfo = (function() {
                     }
                 }
                 if (match['IE'] || match['Edge']) {
-                    var navigator_top = window.screenTop - window.screenY
+                    let navigator_top = window.screenTop - window.screenY
                     switch (navigator_top) {
                         case 71: // 无收藏栏,贴边
                             break
@@ -353,7 +353,7 @@ var DeviceInfo = (function() {
                     }
                 }
 
-                var browerVersionMap = {
+                let browerVersionMap = {
                     Safari: function() {
                         return u.replace(/^.*Version\/([\d.]+).*$/, '$1')
                     },
@@ -418,7 +418,7 @@ var DeviceInfo = (function() {
                         return u.replace(/^.*QihooBrowser\/([\d.]+).*$/, '$1')
                     },
                     '360SE': function() {
-                        var hash = {
+                        let hash = {
                             '63': '10.0',
                             '55': '9.1',
                             '45': '8.1',
@@ -426,18 +426,18 @@ var DeviceInfo = (function() {
                             '31': '7.0',
                             '21': '6.3'
                         }
-                        var chrome_vision = u.replace(/^.*Chrome\/([\d]+).*$/, '$1')
+                        let chrome_vision = u.replace(/^.*Chrome\/([\d]+).*$/, '$1')
                         return hash[chrome_vision] || ''
                     },
                     '360EE': function() {
-                        var hash = {
+                        let hash = {
                             '69': '11.0',
                             '63': '9.5',
                             '55': '9.0',
                             '50': '8.7',
                             '30': '7.5'
                         }
-                        var chrome_vision = u.replace(/^.*Chrome\/([\d]+).*$/, '$1')
+                        let chrome_vision = u.replace(/^.*Chrome\/([\d]+).*$/, '$1')
                         return hash[chrome_vision] || ''
                     },
                     Maxthon: function() {
@@ -459,7 +459,7 @@ var DeviceInfo = (function() {
                         return u.replace(/^.*SE ([\d.X]+).*$/, '$1').replace(/^.*SogouMobileBrowser\/([\d.]+).*$/, '$1')
                     },
                     LBBROWSER: function() {
-                        var hash = {
+                        let hash = {
                             '57': '6.5',
                             '49': '6.0',
                             '46': '5.9',
@@ -469,7 +469,7 @@ var DeviceInfo = (function() {
                             '29': '4.5',
                             '21': '4.0'
                         }
-                        var chrome_vision = navigator.userAgent.replace(/^.*Chrome\/([\d]+).*$/, '$1')
+                        let chrome_vision = navigator.userAgent.replace(/^.*Chrome\/([\d]+).*$/, '$1')
                         return hash[chrome_vision] || ''
                     },
                     '2345Explorer': function() {
@@ -509,37 +509,37 @@ var DeviceInfo = (function() {
                         return u.replace(/^.*IqiyiVersion\/([\d.]+).*$/, '$1')
                     }
                 }
-                _this.browserVersion = ''
-                if (browerVersionMap[_this.browser]) {
-                    _this.browserVersion = browerVersionMap[_this.browser]()
-                    if (_this.browserVersion == u) {
-                        _this.browserVersion = ''
+                _self.browserVersion = ''
+                if (browerVersionMap[_self.browser]) {
+                    _self.browserVersion = browerVersionMap[_self.browser]()
+                    if (_self.browserVersion == u) {
+                        _self.browserVersion = ''
                     }
                 }
 
-                if (_this.browser == 'Edge') {
-                    _this.engine = 'EdgeHTML'
+                if (_self.browser == 'Edge') {
+                    _self.engine = 'EdgeHTML'
                 }
-                if (_this.browser == 'Chrome' && parseInt(_this.browserVersion) > 27) {
-                    _this.engine = 'Blink'
+                if (_self.browser == 'Chrome' && parseInt(_self.browserVersion) > 27) {
+                    _self.engine = 'Blink'
                 }
-                if (_this.browser == 'Opera' && parseInt(_this.browserVersion) > 12) {
-                    _this.engine = 'Blink'
+                if (_self.browser == 'Opera' && parseInt(_self.browserVersion) > 12) {
+                    _self.engine = 'Blink'
                 }
-                if (_this.browser == 'Yandex') {
-                    _this.engine = 'Blink'
+                if (_self.browser == 'Yandex') {
+                    _self.engine = 'Blink'
                 }
 
-                return _this.browser + '（版本: ' + _this.browserVersion + '&nbsp;&nbsp;内核: ' + _this.engine + '）'
+                return _self.browser + '（版本: ' + _self.browserVersion + '&nbsp;&nbsp;内核: ' + _self.engine + '）'
             }
         }
     })()
     // 逻辑层
-    var LogicLibrary = (function() {
+    let LogicLibrary = (function() {
         return {
             DeviceInfoObj: function(params) {
-                params = params || { domain: '' };
-                var info = {
+                params = params || { domain: '' }
+                let info = {
                     deviceType: MethodLibrary.getDeviceType(), // 设备类型
                     OS: MethodLibrary.getOS(), // 操作系统
                     OSVersion: MethodLibrary.getOSVersion(), // 操作系统版本
@@ -553,27 +553,27 @@ var DeviceInfo = (function() {
                     userAgent: VariableLibrary.navigator.userAgent // 包含 appCodeName,appName,appVersion,language,platform 等
                 }
                 if (!params.info || params.info.length == 0) {
-                    return info;
+                    return info
                 }
-                var infoTemp = {};
-                for (var i in info) {
+                let infoTemp = {}
+                for (let i in info) {
                     params.info.forEach(function(item) {
                         if (item.toLowerCase() == i.toLowerCase()) {
-                            item = i;
-                            infoTemp[item] = info[item];
+                            item = i
+                            infoTemp[item] = info[item]
                         }
                     })
                 }
-                return infoTemp;
+                return infoTemp
             }
         }
     })()
     // 对外暴露方法
     return {
         getDeviceInfo: function(params) {
-            return LogicLibrary.DeviceInfoObj(params);
+            return LogicLibrary.DeviceInfoObj(params)
         }
     }
 })()
 
-export default DeviceInfo;
+export default DeviceInfo

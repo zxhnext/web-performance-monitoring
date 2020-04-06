@@ -1,8 +1,9 @@
-import AjaxError from './ajaxError.js';
-import ConsoleError from './consoleError.js';
-import JsError from './jsError.js';
-import PromiseError from './promiseError.js';
-import ResourceError from './resourceError.js';
-import VueError from './vueError.js';
+import AjaxError from './ajaxError.js'
+import ConsoleError from './consoleError.js'
+import JsError from './jsError.js'
+import PromiseError from './promiseError.js'
+import ResourceError from './resourceError.js'
+import FrameError from './framesError.js'
+import VueError from './vueError.js'
 
-export { AjaxError,ConsoleError,JsError,PromiseError,ResourceError,VueError };
+export { AjaxError, ConsoleError, JsError, PromiseError, ResourceError, VueError, FrameError }

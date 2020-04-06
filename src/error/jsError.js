@@ -1,8 +1,8 @@
-import Monitor from "../library/monitor.js"
+import Monitor from '../utils/monitor.js'
 import {
     ErrorCategoryEnum,
     ErrorLevelEnum
-} from "../library/config.js"
+} from '../utils/config.js'
 /**
  * 捕获JS错误
  * onerror用来捕捉预料之外的错误，而try-catch用来在可预见情况下监控特定的错误，两者组合使用更加高效
@@ -12,10 +12,11 @@ import {
  * try不能检测到语法错误, 词法解析就挂了，语法解析错误是捕获不了的, onerror也不行
  * try-catch 处理异常的能力有限，只能捕获捉到运行时非异步错误，对于语法错误和异步错误就显得无能为力，捕捉不到。
  */
-class JSError extends Monitor {
+class JSError {
 
-    constructor(params) {
-        super(params);
+    constructor(params, newCaptureClick) {
+        this.params = params
+        this.newCaptureClick = newCaptureClick
     }
 
     /**
@@ -38,55 +39,52 @@ class JSError extends Monitor {
      * 脚本的异常数降低了10倍
      */
     handleError() {
-        setTimeout(() => {
-            window.onerror = (msg, url, line, col, error) => {
-                try {
-                    //没有URL不上报！上报也不知道错误
-                    if (msg != "Script error." && !url) {
-                        return true;
-                    }
-                    let key = msg.match(/(\w+)/g) || [];
-                    this.level = ErrorLevelEnum.WARN;
-                    this.category = ErrorCategoryEnum.JS_ERROR;
-                    this.name = key.length > 0 && key[0];
-                    this.type = key.length > 1 && key[1];
-                    this.msg = msg || null;
-                    this.url = url || null;
-                    this.line = line || null;
-                    // 不一定所有浏览器都支持col参数
-                    // 不过 [IE]下 window.event 对象提供了 errorLine 和 errorCharacter，以此来对应相应的行列号信息
-                    this.col = col || (window.event && window.event.errorCharacter) || null;
-                    this.nowTime = new Date().getTime();
-
-                    if (!!error && !!error.stack) {
-                        // 如果浏览器有堆栈信息，直接使用
-                        this.errorObj.error = error.stack.toString();
-
-                    } else if (!!arguments.callee) {
-                        // 尝试通过callee拿堆栈信息
-                        var ext = [];
-                        // arguments.callee指向arguments对象的拥有函数引用, caller指向调用它的函数
-                        var fn = arguments.callee.caller;
-                        var floor = 3; // 这里只拿三层堆栈信息
-                        while (fn && (--floor > 0)) {
-                            ext.push(fn.toString());
-                            //如果有环
-                            if (fn === fn.caller) {
-                                break;
-                            }
-                            fn = fn.caller;
-                        }
-                        ext = ext.join(",");
-                        this.errorObj.error = ext;
-                    }
-
-                    this.recordError();
-                } catch (error) {
-                    console.log("js错误异常", error);
+        let data = {}
+        window.onerror = (msg, url, line, col, error) => {
+            try {
+                // 没有URL不上报！上报也不知道错误
+                if (msg != "Script error." && !url) {
+                    return true
                 }
-                return true;
+                let key = msg.match(/(\w+)/g) || []
+                data.level = ErrorLevelEnum.WARN
+                data.category = ErrorCategoryEnum.JS_ERROR
+                data.name = key.length > 0 && key[0]
+                data.type = key.length > 1 && key[1]
+                data.msg = msg || null
+                data.url = url || null
+                data.line = line || null
+                // 不一定所有浏览器都支持col参数
+                // 不过 [IE]下 window.event 对象提供了 errorLine 和 errorCharacter，以此来对应相应的行列号信息
+                data.col = col || (window.event && window.event.errorCharacter) || null
+
+                if (!!error && !!error.stack) {
+                    // 如果浏览器有堆栈信息，直接使用
+                    data.stack = error.stack.toString()
+
+                } else if (!!arguments.callee) {
+                    // 尝试通过callee拿堆栈信息
+                    var ext = []
+                    // arguments.callee指向arguments对象的拥有函数引用, caller指向调用它的函数
+                    var fn = arguments.callee.caller
+                    var floor = 3 // 这里只拿三层堆栈信息
+                    while (fn && (--floor > 0)) {
+                        ext.push(fn.toString())
+                        //如果有环
+                        if (fn === fn.caller) {
+                            break
+                        }
+                        fn = fn.caller
+                    }
+                    ext = ext.join(',')
+                    data.stack = ext
+                }
+                new Monitor(this.params, this.newCaptureClick).recordError(data)
+            } catch (err) {
+                console.log('js错误异常：', err)
             }
-        }, 0)
+            return true
+        }
     }
 }
-export default JSError;
+export default JSError

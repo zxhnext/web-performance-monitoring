@@ -1,16 +1,16 @@
-import Monitor from "../library/monitor.js";
+import Monitor from '../utils/monitor.js'
 import {
     ErrorCategoryEnum,
     ErrorLevelEnum
-} from "../library/config.js";
+} from '../utils/config.js'
 
 /**
  * vue错误
  */
-class VueError extends Monitor {
+class VueError {
 
     constructor(params) {
-        super(params);
+        this.params = params
     }
 
     /**
@@ -18,33 +18,37 @@ class VueError extends Monitor {
      */
     handleError(Vue) {
         if (!Vue) {
-            return;
+            return
         }
+        let data = {}
         Vue.config.errorHandler = (error, vm, info) => {
             try {
-                let key = error.message.match(/(\w+)/g) || []
-                let metaData = {
-                    message: error.message,
-                    name: key.length > 0 && key[0],
-                    type: key.length > 1 && key[1],
-                    stack: stack || null,
-                    script_URI: script || null, // 异常脚本url
-                    line_no: line || null, // 异常行号
-                    column_no: column || null, // 异常列号
-                    info: info,
-                };
+                let {
+                    message, // 异常信息
+                    name, // 异常名称
+                    script, // 异常脚本url
+                    line, // 异常行号
+                    column, // 异常列号
+                    stack // 异常堆栈信息
+                } = error
+                data.msg = message
+                data.name = name
+                data.stack = stack || null
+                data.vueErrorUrl = script || null // 异常脚本url
+                data.line = line || null // 异常行号
+                data.col = column || null // 异常列号
+                data.vueInfo = info
                 if (Object.prototype.toString.call(vm) === '[object Object]') {
-                    metaData.componentName = vm._isVue ? vm.$options.name || vm.$options._componentTag : vm.name;
-                    metaData.propsData = vm.$options.propsData;
+                    data.vueComponentName = vm._isVue ? vm.$options.name || vm.$options._componentTag : vm.name
+                    data.vuePropsData = vm.$options.propsData
                 }
-                this.level = ErrorLevelEnum.WARN;
-                this.msg = JSON.stringify(metaData);
-                this.category = ErrorCategoryEnum.VUE_ERROR;
-                this.recordError();
+                data.level = ErrorLevelEnum.WARN
+                data.category = ErrorCategoryEnum.VUE_ERROR
+                new Monitor(this.params).recordError(data)
             } catch (error) {
-                console.log("vue错误异常", error);
+                console.log('vue错误异常：', error)
             }
         }
     }
 }
-export default VueError;
+export default VueError

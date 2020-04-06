@@ -1,2 +1,2 @@
-import DeviceInfo from "./device.js";
+import DeviceInfo from './device.js'
 export default DeviceInfo 
