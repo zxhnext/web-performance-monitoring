@@ -65,7 +65,16 @@ class Monitor {
     handleErrorInfo(params) {
         let deviceInfo = this.getDeviceInfo()
         let extendsInfo = this.getExtendsInfo()
-        let recordInfo = {}
+        let recordInfo = {
+            getErrorId: utils.randomString(),
+            url: params.url || location.href, // 错误信息地址
+            category: params.category || null, // 错误分类
+            logType: params.level || ErrorLevelEnum.INFO, // 错误级别
+            msg: params.msg || null, // 错误信息
+            deviceInfo: deviceInfo, // 设备信息 
+            time: new Date().getTime() // 错误时间
+        }
+        Object.assign(recordInfo, extendsInfo)
         let txt = `错误类别: ${params.category}\r\n`
         txt += `日志信息: ${params.msg}\r\n`
         txt += `URL: ${params.url}\r\n`
@@ -81,7 +90,10 @@ class Monitor {
                 if (recordInfo.stack) {
                     txt += `错误栈: ${recordInfo.stack}\r\n`
                 }
-                this.newCaptureClick.reportCaptureImage()
+                this.newCaptureClick.reportCaptureImage({
+                    getErrorId: recordInfo.getErrorId, 
+                    url: this.reportUrl
+                })
                 break
             case ErrorCategoryEnum.IFRAME_ERROR:
                 recordInfo.name = params.name || null // 错误名
@@ -127,16 +139,9 @@ class Monitor {
                 }
                 break
         }
-        txt += `设备信息: ${deviceInfo}` // 设备信息
-        recordInfo.url = params.url || location.href // 错误信息地址
-        recordInfo.category = params.category || null // 错误分类
-        recordInfo.logType = params.level || ErrorLevelEnum.INFO // 错误级别
-        recordInfo.msg = params.msg || null // 错误信息
+        txt += `设备信息: ${deviceInfo}` // 设备信息 
         recordInfo.logInfo = txt // 错误信息详细
-        recordInfo.deviceInfo = deviceInfo // 设备信息 
-        recordInfo.time = new Date().getTime() // 错误时间  
-
-        return Object.assign(recordInfo, extendsInfo)
+        return recordInfo
     }
 
     /**

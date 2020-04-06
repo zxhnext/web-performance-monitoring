@@ -41,12 +41,12 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <script>
-        // monitorJS.monitorPerformance({
-        //     isPage: true,
-        //     isResource: true,
-        //     pageId: 001,
-        //     url: 'http://baidu.com/api'
-        // })
+        monitorJS.monitorPerformance({
+            isPage: true,
+            isResource: true,
+            pageId: 001,
+            url: 'http://baidu.com/api'
+        })
         monitorJS.init({
             url: 'http://baidu.com/api', // 上报错误地址
             consoleError: true,
@@ -67,6 +67,12 @@
             return Math.floor((Math.random() * 1000) + 1)
         }
 
+        // let time = monitorJS.measure(fn)
+        // console.log('time', time)
+
+        // function fn() {
+        //     for(let i=0; i<100000; i++) {}
+        // }
 
         // 监听ajax错误
         // let xhr = new XMLHttpRequest()
@@ -94,12 +100,13 @@
         // .catch(err => console.log("Oh, error", err))//执行结果是 reject就调用catch方法
 
         // 监听js错误
-        // $('.dom1').click(function() {
-        //     console.log('dom1')
-        // })
-        // $('.dom2').click(function() {
-        //     errorDom2
-        // })
+        $('.dom1').click(function() {
+            console.log('dom1')
+        })
+        $('.dom2').click(function() {
+            errorDom2
+        })
+        error111
 
         // 监听promise错误  有catch情况下不捕捉错误
         // new Promise((resolve, reject) => {
@@ -156,15 +163,15 @@
         //     },
         // })
 
-        console.tInfo("11111111111111") // console_error
-        console.tWarn("22222222222222") // console_error
-        setTimeout(()=>{
-            console.tError("333333333333333333") // console_error
-        }, 260)
-        setTimeout(()=>{
-            console.tError("444444444444444444") // console_error
-        }, 200)
-        console.tError("5555555555555") // console_error
+        // console.tInfo("11111111111111") // console_error
+        // console.tWarn("22222222222222") // console_error
+        // setTimeout(()=>{
+        //     console.tError("333333333333333333") // console_error
+        // }, 260)
+        // setTimeout(()=>{
+        //     console.tError("444444444444444444") // console_error
+        // }, 200)
+        // console.tError("5555555555555") // console_error
     </script>
 </body>
 </html>

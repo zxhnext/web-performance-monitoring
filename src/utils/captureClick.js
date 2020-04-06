@@ -1,3 +1,4 @@
+import API from '../http/api.js'
 /**
  * 
  * @param {url} url  异步加载js
@@ -44,8 +45,9 @@ class CaptureClick{
 
     /**
      * 录屏上报
+     * @param options {url: 上报链接 id: 错误id}
      */
-    reportCaptureImage () {
+    reportCaptureImage (options) {
         if (!this.captureClick) {
             return
         }
@@ -56,12 +58,12 @@ class CaptureClick{
         // 从cdn上动态插入
         if (window.html2canvas) {
             if (tobeReport.length) {
-                this.dom2img(tobeReport)
+                this.dom2img(tobeReport, options)
             }
         } else {
             insertJs("//unpkg.com/html2canvas@1.0.0-alpha.12/dist/html2canvas.min.js").then(() => {
                 if (tobeReport.length && window.html2canvas) {
-                    this.dom2img(tobeReport)
+                    this.dom2img(tobeReport, options)
                 }
             }).catch(error => {
                 console.log('录屏失败：', error)
@@ -69,7 +71,7 @@ class CaptureClick{
         }  
     }
 
-    dom2img (doms = []) {
+    dom2img (doms = [], options) {
         // 压缩图片地址
         let compressedUrlList = []
         if (window.LZString && LZString.compress) {
@@ -80,6 +82,7 @@ class CaptureClick{
                     console.log('截屏压缩图片文件地址：', compressedUrlList[index])
                 })
             })
+            // new API(options.url).report({compressedUrlList, getErrorId: options.getErrorId})
         } else {
             insertJs('//unpkg.com/lz-string@1.4.4/libs/lz-string.js').then(() => {
                 doms.forEach((dom, index) => {
@@ -89,6 +92,7 @@ class CaptureClick{
                         console.log('截屏压缩图片文件地址：', compressedUrlList[index])
                     })
                 })
+                // new API(options.url).report({compressedUrlList, getErrorId: options.getErrorId})
             }).catch(error => {
                 console.log('压缩图片失败：', error)
             })

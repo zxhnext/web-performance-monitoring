@@ -1,4 +1,4 @@
-import performance from './performance'
+import { monitorPerformance, measure  } from './performance'
 import { AjaxLibEnum } from './utils/config.js'
 import CaptureClick from './utils/captureClick.js'
 import utils from './utils/utils.js'
@@ -9,9 +9,9 @@ let monitorJS = {
      * 监听页面性能
      * @param {*} options {pageId：页面标示, url：上报地址, isPage：是否上报页面性能数据, isResource：是否上报页面资源数据}
      */
-    monitorPerformance(options) {
-        performance(options)
-    },
+    monitorPerformance,
+
+    measure,
 
     init(options) {
         options = options || {}

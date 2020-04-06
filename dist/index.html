@@ -68,6 +68,12 @@
             return Math.floor((Math.random() * 1000) + 1)
         }
 
+        // let time = monitorJS.measure(fn)
+        // console.log('time', time)
+
+        // function fn() {
+        //     for(let i=0; i<100000; i++) {}
+        // }
 
         // 监听ajax错误
         // let xhr = new XMLHttpRequest()
@@ -78,11 +84,11 @@
         //             var data=xhr.responseText
         //             console.log('data', data)
         //         }
-        //     };
+        //     }
         // }
         // xhr.onerror = function() {
         //     console.log('Oh, error')
-        // };
+        // }
         // xhr.send(JSON.stringify({a: 1}))
 
         // 监听fetch错误
@@ -95,12 +101,13 @@
         // .catch(err => console.log("Oh, error", err))//执行结果是 reject就调用catch方法
 
         // 监听js错误
-        // $('.dom1').click(function() {
-        //     console.log('dom1')
-        // })
-        // $('.dom2').click(function() {
-        //     errorDom2
-        // })
+        $('.dom1').click(function() {
+            console.log('dom1')
+        })
+        $('.dom2').click(function() {
+            errorDom2
+        })
+        error111
 
         // 监听promise错误  有catch情况下不捕捉错误
         // new Promise((resolve, reject) => {
@@ -112,7 +119,7 @@
         //     resolve()
         // }).then(() => {
         //     throw 'promise error'
-        // });
+        // })
         // new Promise((resolve, reject) => {
         //     new Error('---000')
         //     reject(123)
@@ -143,8 +150,8 @@
         //     methods: {
         //         func1(){
         //             return new Promise((resolve,reject) => {
-        //                 resolve();
-        //             });
+        //                 resolve()
+        //             })
         //         },
         //         func2(){
         //             monitorJS.monitorPerformance({
@@ -157,15 +164,15 @@
         //     },
         // })
 
-        console.tInfo("11111111111111") // console_error
-        console.tWarn("22222222222222") // console_error
-        setTimeout(()=>{
-            console.tError("333333333333333333") // console_error
-        }, 260)
-        setTimeout(()=>{
-            console.tError("444444444444444444") // console_error
-        }, 200)
-        console.tError("5555555555555") // console_error
+        // console.tInfo("11111111111111") // console_error
+        // console.tWarn("22222222222222") // console_error
+        // setTimeout(()=>{
+        //     console.tError("333333333333333333") // console_error
+        // }, 260)
+        // setTimeout(()=>{
+        //     console.tError("444444444444444444") // console_error
+        // }, 200)
+        // console.tError("5555555555555") // console_error
     </script>
 </body>
 </html>
