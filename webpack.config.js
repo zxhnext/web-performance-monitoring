@@ -1,7 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+// const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 const fileVersion = new Date().getTime()
 const isDev = process.env.NODE_ENV === 'development'
@@ -28,7 +28,8 @@ let config = {
     },
     mode: 'development',
     output: {
-        path: path.resolve(__dirname, 'dist'), //打包后的文件存放的地方
+        path: path.resolve(__dirname, 'dist'), // 打包后的文件存放的地方
+        // filename: '[name].js', // 打包后输出文件的文件名
         filename: '[name].min.js', //打包后输出文件的文件名
         publicPath: "",
         chunkFilename: "[name].min.js",
@@ -46,7 +47,7 @@ let config = {
         ]
     },
     plugins: [
-        new CleanWebpackPlugin(),
+        // new CleanWebpackPlugin(),
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: isDev ? '"development"' : '"production"'

@@ -57,13 +57,13 @@
 ### 4、引入方式
 ```
 1、支持es6方式引入
-import monitorJS from '../node_modules/web-performance-monitoring/dist/monitorjs.min'
+import monitorJS from 'web-performance-monitoring'
 
-2、支持commonjs方式引入
-const monitorJS = require('../node_modules/web-performance-monitoring/dist/monitorjs.min')
+# 2、支持commonjs方式引入
+# const monitorJS = require('web-performance-monitoring')
 
-3、支持AMD方式引入
-define(['../node_modules/web-performance-monitoring/dist/monitorjs.min'],(monitorJS)=>{})
+# 3、支持AMD方式引入
+# define(['../node_modules/web-performance-monitoring/dist/monitorjs.min.js'],(monitorJS)=>{})
 
 4、支持<script>标签引入方式
 <script src="../node_modules/web-performance-monitoring/dist/monitorjs.min.js"></script>

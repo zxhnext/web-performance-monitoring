@@ -1,8 +1,8 @@
 {
   "name": "web-performance-monitoring",
-  "version": "2.0.7",
+  "version": "2.1.1",
   "description": "",
-  "main": "index.js",
+  "main": "./src/index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --config webpack.config.js",
     "build": "cross-env NODE_ENV=production webpack --config webpack.config.js"
