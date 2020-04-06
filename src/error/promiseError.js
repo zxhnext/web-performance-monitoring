@@ -33,8 +33,7 @@ class PromiseError {
                 let errs = stack.match(/\(.+?\)/)
                 if (errs && errs.length) {
                     errs = errs[0]
-                    errs = errs.replace(/\w.+[js|html]/g, $1 => { resourceUrl = $1; return ''; })
-                    data.resourceUrl = resourceUrl || null
+                    errs = errs.replace(/\w.+[js|html]/g, $1 => { data.resourceUrl = $1; return ''; })
                     errs = errs.split(':')
                     if (errs.length > 1) {
                         data.line = parseInt(errs[1] || null)

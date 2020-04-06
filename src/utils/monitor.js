@@ -124,7 +124,7 @@ class Monitor {
             case ErrorCategoryEnum.VUE_ERROR:
                 recordInfo.vueInfo = params.vueInfo || null
                 recordInfo.name = params.name || null// 错误名
-                recordInfo.vueErrorUrl = params.vueErrorUrl || null
+                recordInfo.resourceUrl = params.resourceUrl || null
                 recordInfo.vueComponentName = params.vueComponentName || null
                 recordInfo.vuePropsData = params.vuePropsData || null
                 recordInfo.line = params.line || null // 行数

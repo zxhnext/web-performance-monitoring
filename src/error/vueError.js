@@ -34,9 +34,20 @@ class VueError {
                 data.msg = message
                 data.name = name
                 data.stack = stack || null
-                data.vueErrorUrl = script || null // 异常脚本url
+                data.resourceUrl = script || null // 异常脚本url
                 data.line = line || null // 异常行号
                 data.col = column || null // 异常列号
+
+                let errs = stack.match(/\(.+?\)/)
+                if (errs && errs.length) {
+                    errs = errs[0]
+                    errs = errs.replace(/\w.+[js|html]/g, $1 => { data.resourceUrl = $1; return ''; })
+                    errs = errs.split(':')
+                    if (errs.length > 1) {
+                        data.line = parseInt(errs[1] || null)
+                        data.col = parseInt(errs[2] || null)
+                    }
+                }
                 data.vueInfo = info
                 if (Object.prototype.toString.call(vm) === '[object Object]') {
                     data.vueComponentName = vm._isVue ? vm.$options.name || vm.$options._componentTag : vm.name
