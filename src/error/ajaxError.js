@@ -173,3 +173,88 @@ const xhrError = params => {
 //     data.msg = JSON.stringify(error)
 //     new Monitor(params).recordError(data)
 // }
+
+// axios重写
+// function _Axios() {
+//     if (!window.axios) return;
+//     const _axios = window.axios
+//     const List = ['axios', 'request', 'get', 'delete', 'head', 'options', 'put', 'post', 'patch']
+//     List.forEach(item => {
+//         _reseat(item)
+//     })
+
+//     function _reseat(item) {
+//         let _key = null;
+//         if (item === 'axios') {
+//             window['axios'] = resetFn;
+//             _key = _axios
+//         } else if (item === 'request') {
+//             window['axios']['request'] = resetFn;
+//             _key = _axios['request'];
+//         } else {
+//             window['axios'][item] = resetFn;
+//             _key = _axios[item];
+//         }
+
+//         function resetFn() {
+//             const result = ajaxArg(arguments, item)
+//             if (result.report !== 'report-data') {
+//                 const url = result.url ? result.url.split('?')[0] : '';
+//                 conf.ajaxMsg[url] = result;
+//                 conf.ajaxLength = conf.ajaxLength + 1;
+//                 conf.haveAjax = true
+//             }
+//             return _key.apply(this, arguments)
+//                 .then(function (res) {
+//                     if (result.report === 'report-data') return res;
+//                     getAjaxTime('load');
+//                     try {
+//                         const responseURL = res.request.responseURL ? res.request.responseURL.split('?')[0] : '';
+//                         const responseText = res.request.responseText;
+//                         if (conf.ajaxMsg[responseURL]) conf.ajaxMsg[responseURL]['decodedBodySize'] = responseText.length;
+//                     } catch (e) { }
+//                     return res
+//                 })
+//                 .catch((err) => {
+//                     if (result.report === 'report-data') return res;
+//                     getAjaxTime('error')
+//                     //error
+//                     ajaxResponse({
+//                         statusText: err.message,
+//                         method: result.method,
+//                         responseURL: result.url,
+//                         options: result.options,
+//                         status: err.response ? err.response.status : 0,
+//                     })
+//                     return err
+//                 })
+//         }
+//     }
+// }
+
+// // Ajax arguments
+// function ajaxArg(arg, item) {
+//     let result = { method: 'GET', type: 'xmlhttprequest', report: '' }
+//     let args = Array.prototype.slice.apply(arg)
+//     try {
+//         if (item == 'axios' || item == 'request') {
+//             result.url = args[0].url
+//             result.method = args[0].method
+//             result.options = result.method.toLowerCase() == 'get' ? args[0].params : args[0].data
+//         } else {
+//             result.url = args[0]
+//             result.method = ''
+//             if (args[1]) {
+//                 if (args[1].params) {
+//                     result.method = 'GET'
+//                     result.options = args[1].params;
+//                 } else {
+//                     result.method = 'POST'
+//                     result.options = args[1];
+//                 }
+//             }
+//         }
+//         result.report = args[0].report
+//     } catch (err) { }
+//     return result;
+// }

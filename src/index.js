@@ -1,3 +1,5 @@
+// https://github.com/Jameszws/monitorjs_horse
+
 import { monitorPerformance, measure  } from './performance'
 import { AjaxLibEnum } from './utils/config.js'
 import CaptureClick from './utils/captureClick.js'

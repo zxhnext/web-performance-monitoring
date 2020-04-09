@@ -76,3 +76,12 @@ export default ResourceError
    }
    img.src = REPORT_URL + cssLoadTime + '-' + jsLoadTime
 </script> */}
+
+// 监控图片错误
+// <img src="..." onerror="noFind();" />
+
+// function noFind(event){
+//     var img = event.srcElement;
+//     img.src = '...'  // 默认图片地址
+//     img.onerror = null;  // 控制不要循环展示错误
+// }
