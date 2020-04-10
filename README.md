@@ -11,7 +11,7 @@
 ```javascript
 // 1. import 引入方式
 import monitorJS from 'web-performance-monitoring'
-// 普通页面引入方式
+// 2. 普通页面引入方式
 <script src="../node_modules/web-performance-monitoring/dist/monitorjs.min.js"></script>
 
 // 1. 页面性能监控
