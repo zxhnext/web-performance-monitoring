@@ -9,7 +9,9 @@
 # vue项目建议在new Vue()前引入，普通项目建议在业务代码前引入
 ```
 ```javascript
+// 1. import 引入方式
 import monitorJS from 'web-performance-monitoring'
+// 普通页面引入方式
 <script src="../node_modules/web-performance-monitoring/dist/monitorjs.min.js"></script>
 
 // 1. 页面性能监控
