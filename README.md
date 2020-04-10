@@ -1,50 +1,14 @@
 ### 1、页面性能监控
-* 1）上一个页面卸载总耗时 prevPage；
-* 2）上一个页面卸载 prevUnload；
-* 3）重定向的时间 redirectTime；
-* 4）DNS 缓存时间 appcacheTime；
-* 5）DNS 查询时间 dnsTime；
-
-* 6）读取页面第一个字节的时间 ttfbTime；
-* 7）tcp连接耗时 tcpTime；
-* 8）网络总耗时 network；
-
-* 9）前端从发送请求到接收请求的时间 send；
-* 10）接收数据用时 receive；
-* 11）请求页面总耗时 request；
-
-* 12）解析dom树耗时 analysisTime；
-* 13）执行 onload 回调函数的时间 onload；
-* 14）前端总时间 frontend；
-
-* 15）白屏时间 blankTime；
-* 16）dom准备时间 domReadyTime；
-* 17）页面加载完成的时间 loadPage；
-* 18）可操作时间 domIteractive；
-* 19）FP；
-* 20）FCP；
-* 21）TTI；
-* 22）longtask；
-* ...
-
-* 1）js错误信息监控；
-* 2）支持vue错误信息监控(需要将vue传入，并设置vueError:true)；
-* 3）支持promise中未捕获异常信息的抓取；
-* 4）支持console.error错误信息捕获；
-* 5）支持资源错误信息捕获；
-* 6）支持ajax库（xhr）异常信息捕获；
-* 7）支持fetch异常信息捕获；
-* 8）支持iframe异常信息捕获；
-* 9）支持截屏上报；
+支持监控FP、FCP、TTI、long task、DNS查询时间、TCP连接耗时、接收数据用时、dom树耗时、白屏时间、页面加载完成时间等各项页面性能数据
 
 ### 2、异常捕获
 支持捕获js、vue、promise、ajax、fetch、iframse等错误,并截屏上报
 
 ### 3、使用方式
+```
+# vue项目建议在new Vue()前引入，普通项目建议在业务代码前引入
+```
 ```javascript
-
-vue项目建议在new Vue前引入，普通项目建议在业务代码前引入
-
 import monitorJS from 'web-performance-monitoring'
 <script src="../node_modules/web-performance-monitoring/dist/monitorjs.min.js"></script>
 
@@ -157,7 +121,3 @@ function fn() {
 
 // error数据，具体参考打印上报信息
 ```
-
-### 10、使用时机
-1） 普通项目，页面初始化时候，就可以完成初始化监控工具（最好在业务代码的前面，避免监控有漏）;   
-2） vue项目，需要在new Vue之前初始化监控工具，避免监控有漏;
