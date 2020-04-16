@@ -37,7 +37,7 @@ class AjaxError {
 export default AjaxError
 
 const fetchError = params => {
-    if(!window.fetch) return
+    if (!window.fetch) return
     let _oldFetch = window.fetch
     let data = {
         request: {
@@ -72,24 +72,24 @@ const fetchError = params => {
             data.request.params = JSON.parse(args[1].body) || {}
         }
         return _oldFetch.apply(this, arguments)
-        .then(res => {
-            if (res.status !== 200) { // True if status is HTTP 2xx
-                // 上报错误
-                data.response = {
-                    status: res.status,
-                    responseText: res.statusText
+            .then(res => {
+                if (res.status !== 200) { // True if status is HTTP 2xx
+                    // 上报错误
+                    data.response = {
+                        status: res.status,
+                        responseText: res.statusText
+                    }
+                    data.msg = `${data.request.method} ${res.url} ${res.status} (${res.statusText})`
+                    _handleEvent()
                 }
-                data.msg = `${data.request.method} ${res.url} ${res.status} (${res.statusText})`
+                return res
+            })
+            .catch(error => {
+                // 上报错误
+                data.msg = error.stack || error
                 _handleEvent()
-            }
-            return res
-        })
-        .catch(error => {
-            // 上报错误
-            data.msg = error.stack || error
-            _handleEvent()
-            throw error
-        })
+                throw error
+            })
     }
 }
 
@@ -134,7 +134,7 @@ const xhrError = params => {
         }
     }
     // 重写 open
-    XMLHttpRequest.prototype.open = function() {
+    XMLHttpRequest.prototype.open = function () {
         // 先在此处取得请求的method
         data.request.method = arguments[0]
         // 再调用原生 open 实现重写
@@ -176,6 +176,10 @@ const xhrError = params => {
 
 // axios重写
 // function _Axios() {
+//     let data = {
+//         response: {},
+//         request: {}
+//     }
 //     if (!window.axios) return;
 //     const _axios = window.axios
 //     const List = ['axios', 'request', 'get', 'delete', 'head', 'options', 'put', 'post', 'patch']
@@ -198,34 +202,21 @@ const xhrError = params => {
 
 //         function resetFn() {
 //             const result = ajaxArg(arguments, item)
-//             if (result.report !== 'report-data') {
-//                 const url = result.url ? result.url.split('?')[0] : '';
-//                 conf.ajaxMsg[url] = result;
-//                 conf.ajaxLength = conf.ajaxLength + 1;
-//                 conf.haveAjax = true
-//             }
 //             return _key.apply(this, arguments)
 //                 .then(function (res) {
 //                     if (result.report === 'report-data') return res;
-//                     getAjaxTime('load');
 //                     try {
-//                         const responseURL = res.request.responseURL ? res.request.responseURL.split('?')[0] : '';
-//                         const responseText = res.request.responseText;
-//                         if (conf.ajaxMsg[responseURL]) conf.ajaxMsg[responseURL]['decodedBodySize'] = responseText.length;
-//                     } catch (e) { }
+//                         data.request.url = res.request.responseURL ? res.request.responseURL.split('?')[0] : '';
+//                         // data.request.responseText = res.request.responseText;
+//                         data.request.method = result.method
+//                         data.request.params = result.options
+//                     } catch (e) {}
 //                     return res
 //                 })
 //                 .catch((err) => {
 //                     if (result.report === 'report-data') return res;
-//                     getAjaxTime('error')
-//                     //error
-//                     ajaxResponse({
-//                         statusText: err.message,
-//                         method: result.method,
-//                         responseURL: result.url,
-//                         options: result.options,
-//                         status: err.response ? err.response.status : 0,
-//                     })
+//                     data.msg = err.message
+//                     data.response.status = err.response ? err.response.status : 0
 //                     return err
 //                 })
 //         }
@@ -234,7 +225,11 @@ const xhrError = params => {
 
 // // Ajax arguments
 // function ajaxArg(arg, item) {
-//     let result = { method: 'GET', type: 'xmlhttprequest', report: '' }
+//     let result = {
+//         method: 'GET',
+//         type: 'xmlhttprequest',
+//         report: ''
+//     }
 //     let args = Array.prototype.slice.apply(arg)
 //     try {
 //         if (item == 'axios' || item == 'request') {
@@ -255,6 +250,6 @@ const xhrError = params => {
 //             }
 //         }
 //         result.report = args[0].report
-//     } catch (err) { }
+//     } catch (err) {}
 //     return result;
 // }
