@@ -123,3 +123,6 @@ function fn() {
 
 // error数据，具体参考打印上报信息
 ```
+
+### 5、参考文章
+[前端性能监控揭秘](https://juejin.im/post/5e9299956fb9a03c977543b7)
