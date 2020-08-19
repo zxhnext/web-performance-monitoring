@@ -2,7 +2,7 @@
 支持监控FP、FCP、TTI、long task、DNS查询时间、TCP连接耗时、接收数据用时、dom树耗时、白屏时间、页面加载完成时间等各项页面性能数据
 
 ### 2、异常捕获
-支持捕获js、vue、promise、ajax、fetch、iframse等错误,并截屏上报
+支持捕获js、vue、promise、ajax、fetch、iframe等错误,并截屏上报
 
 ### 3、使用方式
 ```
